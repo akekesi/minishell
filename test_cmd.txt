@@ -1,0 +1,4 @@
+pip list
+pip list | grep pp
+pip list | wc -l
+THIS IS AN ERROR
