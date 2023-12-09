@@ -23,11 +23,11 @@ while IFS= read -r command; do
     
     if [ $exit_code -ne 0 ]; then
         echo -e "\e[31mError: Command failed with exit code $exit_code\e[0m" >&2
-        exit $exit_code
+        # exit $exit_code
     else
         echo -e "\e[32mSuccess: Command executed successfully\e[0m"
     fi
 done < "$commands_file"
 
-echo -e "\e[32mAll commands executed successfully\e[0m"
+# echo -e "\e[32mAll commands executed successfully\e[0m"
 exit 0

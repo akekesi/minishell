@@ -6,11 +6,11 @@
 /*   By: tnakajo <tnakajo@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/04 15:53:51 by tnakajo           #+#    #+#             */
-/*   Updated: 2023/12/05 18:33:43 by tnakajo          ###   ########.fr       */
+/*   Updated: 2023/12/09 19:00:30 by tnakajo          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../inc/minishell.h"
 
 void	prompt()
 {
@@ -48,7 +48,7 @@ char**	parse_input(char* input)
 	}
 
 	int i = 0;
-	char* token = strtok(input, " ");
+	char* token = strtok(input, " "); // need to change
 	while (token != NULL) {
 		args[i++] = token;
 		token = strtok(NULL, " ");

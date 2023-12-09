@@ -1,4 +1,6 @@
 pip list
 pip list | grep pp
 pip list | wc -l
+pip list ||
+pip list |||
 THIS IS AN ERROR
