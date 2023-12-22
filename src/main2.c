@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main2.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnakajo <tnakajo@student.42.fr>            +#+  +:+       +#+        */
+/*   By: njn0te <njn0te@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/20 17:15:20 by tnakajo           #+#    #+#             */
-/*   Updated: 2023/12/20 18:19:40 by tnakajo          ###   ########.fr       */
+/*   Updated: 2023/12/23 03:52:04 by njn0te           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	initialize_minishell();
 
 int main()
 {
-	char *input;
+	char	*input;
 
 	// Initial setup for minishell
 	initialize_minishell();
