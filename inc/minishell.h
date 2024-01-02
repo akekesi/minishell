@@ -1,8 +1,8 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
-// # include <sys/types.h> // pid_t
-// # include <sys/wait.h>  // waitpid
-// # include <fcntl.h>     // O_RDONLY, O_WRONLY
+# include <sys/types.h> // pid_t
+# include <sys/wait.h>  // waitpid
+# include <fcntl.h>     // O_RDONLY, O_WRONLY
 # include <stdio.h> // printf, scanf, fgets, fputs, fopen, fclose, fprintf, fscanf
 # include <stdlib.h> // malloc, free, exit, atoi, qsort, abs
 # include <unistd.h> // fork, pipe, read, write, close, chdir, getcwd, sleep, [new]chdir, [new]getcwd
@@ -15,7 +15,18 @@
 # define MAX_ARG_SIZE 64
 # define MAX_PATH_SIZE 256
 
-void sigint_handler(int sig);
-void setup_signal_handlers();
+// void sigint_handler(int sig);
+// void setup_signal_handlers();
+
+typedef struct s_words  t_words;
+
+typedef struct s_words
+{
+    char    *value;
+    t_words *prev;
+    t_words *next;
+}   t_words;
+
+// void    pipe(char *s);
 
 #endif

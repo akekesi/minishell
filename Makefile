@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: tnakajo <tnakajo@student.42.fr>            +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/12/05 16:23:11 by tnakajo           #+#    #+#              #
-#    Updated: 2023/12/20 18:16:08 by tnakajo          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 # NAME = minishell
 # CC = gcc
 # CFLAGS = -Wall -Wextra -Werror
@@ -39,7 +27,7 @@ LDFLAGS		=	-lreadline
 SRCS_DIR	=	./src/
 OBJS_DIR	=	./obj/
 
-SRC_FILES	=	main2
+SRC_FILES	=	main pipe
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJS		=	$(addprefix $(OBJS_DIR), $(addsuffix .o, $(SRC_FILES)))

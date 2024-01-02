@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tnakajo <tnakajo@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/12/04 15:53:51 by tnakajo           #+#    #+#             */
-/*   Updated: 2023/12/20 20:31:00 by tnakajo          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../inc/minishell.h"
 
 void	prompt()
@@ -37,32 +25,103 @@ char*	read_input()
 	return buffer;
 }
 
-char**	parse_input(char* input)
-{
-	char** args;
-	
-	args = (char **)malloc(MAX_ARG_SIZE * sizeof(char*));
-	if (!args) {
-		printf("malloc error");
-		exit(EXIT_FAILURE);
-	}
+t_words *parse_input(char* input) {
+    t_words *head = NULL, *current = NULL;
+    char buffer[MAX_ARG_SIZE];
+    int i = 0, k = 0;
 
-	int i = 0;
-	char* token = strtok(input, " "); // need to change
-	while (token != NULL) {
-		args[i++] = token;
-		token = strtok(NULL, " ");
-	}
-	args[i] = NULL;
-	return args;
+    while (input[i]) {
+        if (input[i] != ' ') {
+            buffer[k] = input[i];
+            k++;
+        } else {
+            if (k > 0) {
+                buffer[k] = '\0';
+
+                t_words *new_node = (t_words *)malloc(sizeof(t_words));
+                new_node->value = strdup(buffer);
+                new_node->next = NULL;
+                new_node->prev = current;
+
+                if (current) {
+                    current->next = new_node;
+                } else {
+                    head = new_node; // Set the first node as head
+                }
+
+                current = new_node;
+                k = 0;
+            }
+        }
+        i++;
+    }
+
+    // Handle the last word
+    if (k > 0) {
+        buffer[k] = '\0';
+        t_words *new_node = (t_words *)malloc(sizeof(t_words));
+        new_node->value = strdup(buffer);
+        new_node->next = NULL;
+        new_node->prev = current;
+
+        if (current) {
+            current->next = new_node;
+        } else {
+            head = new_node; // In case input is a single word
+        }
+    }
+
+    return head;
 }
 
-void	execute_command(char** args)
+// char**	parse_input(char* input)
+// {
+// 	char** args;
+// 	int i;
+// 	int j;
+// 	int k;
+	
+// 	args = (char **)malloc(MAX_ARG_SIZE * sizeof(char*));
+// 	if (!args) {
+// 		printf("malloc error");
+// 		exit(EXIT_FAILURE);
+// 	}
+// 	for (i = 0; i < MAX_ARG_SIZE; i++) {
+//         args[i] = (char *)malloc(MAX_ARG_SIZE * sizeof(char)); // Allocate memory for each argument
+//         if (!args[i]) {
+//             printf("malloc error\n");
+//             exit(EXIT_FAILURE);
+//         }
+//     }
+	
+// 	i = 0;
+// 	j = 0;
+// 	k = 0;
+// 	while (input[i])
+// 	{
+// 		if (input[i] != ' ')
+// 		{
+// 			args[j][k] = input[i];
+// 			k++;
+// 		}
+// 		else if (input[i] == ' ' && input[i + 1] != ' ')
+// 		{
+// 			args[j][k] = '\0';
+// 			j++;
+// 			k = 0;
+// 		}
+// 		i++;
+// 	}
+// 	args[i] = NULL;
+// 	return args;
+// }
+
+void	execute_command(char **cmd)
 {
 	pid_t pid = fork();
 
     if (pid == 0) {  // Child process
-		execvp(args[0], args);
+		execvp(cmd[0], cmd);
 		perror("execvp");
 		exit(EXIT_FAILURE);
 	} else if (pid > 0) {  // Parent process
@@ -73,14 +132,30 @@ void	execute_command(char** args)
 	}
 }
 
+void	signal_handler(int sig)
+{
+	if (sig == SIGINT)
+	{
+		printf("\n");
+		prompt();
+		fflush(stdout);
+	}
+}
+
 /**
  * signal(SIGINT, signal_handler); -> Handle Ctrl-C
  * signal(SIGQUIT, SIG_IGN);       -> Ignore Ctrl-\
 */
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	char	*input;
-	char	**args;
+	// char	**cmd;
+	t_words	*cmd;
+
+	// envp ??
+    // for (int i = 0; envp[i] != NULL; i++) {
+    //     printf("%s\n", envp[i]);
+    // }
 
 	signal(SIGINT, signal_handler);
 	signal(SIGQUIT, SIG_IGN);
@@ -88,22 +163,18 @@ int	main(void)
 	{
 		prompt();
 		input = read_input();
-		args = parse_input(input);
+		cmd = parse_input(input);
+		// printf("%s\n", cmd->value);
+		// printf("%s\n", cmd->prev->value);
+		printf("%s\n", cmd[2].value);
+		printf("%s\n", cmd[2].next->value);
+		printf("%s\n", cmd[2].prev->value);
 		// Example: Execute the command
-		execute_command(args);
-		free(input);
-		free(args);
+		// printf("You typed: %s\n", *cmd);
+		// execute_command(cmd);
+		// free(input);
+		// free(cmd);
 	}
 
 	return (0);
-}
-
-void	signal_handler(int signo)
-{
-	if (signo == SIGINT)
-	{
-		printf("\n");
-		prompt();
-		fflush(stdout);
-	}
 }
