@@ -27,7 +27,7 @@ LDFLAGS		=	-lreadline
 SRCS_DIR	=	./src/
 OBJS_DIR	=	./obj/
 
-SRC_FILES	=	main pipe
+SRC_FILES	=	main pipe parse
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJS		=	$(addprefix $(OBJS_DIR), $(addsuffix .o, $(SRC_FILES)))

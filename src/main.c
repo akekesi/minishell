@@ -25,55 +25,6 @@ char*	read_input()
 	return buffer;
 }
 
-t_words *parse_input(char* input) {
-    t_words *head = NULL, *current = NULL;
-    char buffer[MAX_ARG_SIZE];
-    int i = 0, k = 0;
-
-    while (input[i]) {
-        if (input[i] != ' ') {
-            buffer[k] = input[i];
-            k++;
-        } else {
-            if (k > 0) {
-                buffer[k] = '\0';
-
-                t_words *new_node = (t_words *)malloc(sizeof(t_words));
-                new_node->value = strdup(buffer);
-                new_node->next = NULL;
-                new_node->prev = current;
-
-                if (current) {
-                    current->next = new_node;
-                } else {
-                    head = new_node; // Set the first node as head
-                }
-
-                current = new_node;
-                k = 0;
-            }
-        }
-        i++;
-    }
-
-    // Handle the last word
-    if (k > 0) {
-        buffer[k] = '\0';
-        t_words *new_node = (t_words *)malloc(sizeof(t_words));
-        new_node->value = strdup(buffer);
-        new_node->next = NULL;
-        new_node->prev = current;
-
-        if (current) {
-            current->next = new_node;
-        } else {
-            head = new_node; // In case input is a single word
-        }
-    }
-
-    return head;
-}
-
 // char**	parse_input(char* input)
 // {
 // 	char** args;
@@ -166,9 +117,16 @@ int	main(int ac, char **av, char **envp)
 		cmd = parse_input(input);
 		// printf("%s\n", cmd->value);
 		// printf("%s\n", cmd->prev->value);
-		printf("%s\n", cmd[2].value);
-		printf("%s\n", cmd[2].next->value);
-		printf("%s\n", cmd[2].prev->value);
+		if (cmd)
+		{
+			printf("%s\n", cmd->value);
+			cmd++;
+			printf("%s\n", cmd[1].value);
+			cmd++;
+			printf("%s\n", cmd[2].value);
+		}
+		// printf("%s\n", cmd[1].next->value);
+		// printf("%s\n", cmd[1].prev->value);
 		// Example: Execute the command
 		// printf("You typed: %s\n", *cmd);
 		// execute_command(cmd);

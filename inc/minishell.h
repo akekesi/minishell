@@ -27,6 +27,6 @@ typedef struct s_words
     t_words *next;
 }   t_words;
 
-// void    pipe(char *s);
+t_words *parse_input(char* input);
 
 #endif
