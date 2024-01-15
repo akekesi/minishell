@@ -4,3 +4,9 @@ pip list | wc -l
 pip list ||
 pip list |||
 THIS IS AN ERROR
+a 'sdsd ' '''sds
+echo $?  // 0
+echo "$?" // 0
+echo '$?' // $?
+echo "'$?'" // '0'
+echo '"$?"' // "$?"
