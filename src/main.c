@@ -69,7 +69,16 @@ int	main(int ac, char **av, char **envp)
 		cmd = parse_input(input);
 		while (cmd != NULL)
 		{
-			printf("-->%s\n", cmd->value);
+			if (strcmp(cmd->value, "pwd") == 0)
+				pwd_cmd();
+			else if (strcmp(cmd->value, "echo") == 0)
+				echo_cmd(cmd);
+			else if (strcmp(cmd->value, "env") == 0)
+				env_cmd(cmd);
+			else if (strcmp(cmd->value, "export") == 0)
+				export_cmd(cmd);
+			else
+				printf("-->%s\n", cmd->value);
 			cmd = cmd->next;
 		}
 		// execute_command(cmd);

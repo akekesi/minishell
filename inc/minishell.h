@@ -11,22 +11,27 @@
 # include <readline/history.h> // add_history (add a line to the history), using_history (start using the history)
 # include <signal.h>    // SIGINT
 
-# define MAX_INPUT_SIZE 1024
-# define MAX_ARG_SIZE 64
-# define MAX_PATH_SIZE 256
+# define MAX_INPUT_SIZE	1024
+# define MAX_ARG_SIZE	64
+# define MAX_PATH_SIZE	256
+# define PATH_MAX		4096
 
 // void sigint_handler(int sig);
 // void setup_signal_handlers();
 
-typedef struct s_words  t_words;
+typedef struct	s_words  t_words;
 
-typedef struct s_words
+typedef struct	s_words
 {
-    char    *value;
-    t_words *prev;
-    t_words *next;
-}   t_words;
+	char	*value;
+	t_words	*prev;
+	t_words	*next;
+}	t_words;
 
 t_words *parse_input(char* input);
+void	pwd_cmd();
+void	echo_cmd(t_words *cmd);
+void	env_cmd();
+void	export_cmd(t_words *cmd);
 
 #endif
