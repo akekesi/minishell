@@ -19,7 +19,7 @@ INCLUDE		=	-I ./inc
 H_FILE		=	minishell.h
 
 CC 			=	cc
-CFLAGS 		=	#-Wall -Wextra -Werror
+CFLAGS 		=	-Wall -Wextra -Werror
 VALGRIND	=	valgrind
 RM			=	rm
 LDFLAGS		=	-lreadline
@@ -27,7 +27,8 @@ LDFLAGS		=	-lreadline
 SRCS_DIR	=	./src/
 OBJS_DIR	=	./obj/
 
-SRC_FILES	=	main pipe parse pwd echo env export
+SRC_FILES	=	main pipe parse \
+				cmd/cd cmd/echo cmd/env cmd/exit cmd/export cmd/pwd cmd/unset
 
 SRCS		=	$(addprefix $(SRCS_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJS		=	$(addprefix $(OBJS_DIR), $(addsuffix .o, $(SRC_FILES)))
