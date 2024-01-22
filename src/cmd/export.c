@@ -1,6 +1,6 @@
 #include "../../inc/minishell.h"
 
-void	export_cmd(t_words *cmd)
+int	export_cmd(t_words *cmd)
 {
 	// Assuming the format is "export VAR=value"
 	char* variable = strtok(cmd->next->value, "=");
@@ -8,7 +8,7 @@ void	export_cmd(t_words *cmd)
 
 	if (variable == NULL || value == NULL) {
 		fprintf(stderr, "Invalid format. Use 'export VAR=value'.\n");
-		return;
+		return (0);
 	}
 
 	// Skip the "export " part to get the actual variable name
@@ -17,6 +17,7 @@ void	export_cmd(t_words *cmd)
 	if (setenv(variable, value, 1) != 0) {
 		perror("setenv failed");
 	}
+	return (1);
 }
 
 // int main() {

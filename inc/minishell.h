@@ -30,12 +30,12 @@ typedef struct	s_words
 
 t_words *parse_input(char* input);
 
-void	cd_cmd(t_words *cmd);
-void	echo_cmd(t_words *cmd);
-void	env_cmd();
-void	exit_cmd(t_words *cmd);
-void	export_cmd(t_words *cmd);
-void	pwd_cmd();
-void	unset_cmd(t_words *cmd);
+int	cd_cmd(t_words *cmd);
+int	echo_cmd(t_words *cmd);
+int	env_cmd();
+int	exit_cmd(t_words *cmd);
+int	export_cmd(t_words *cmd);
+int	pwd_cmd();
+int	unset_cmd(t_words *cmd);
 
 #endif

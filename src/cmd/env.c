@@ -1,6 +1,6 @@
 #include "../../inc/minishell.h"
 
-void	env_cmd()
+int	env_cmd()
 {
     extern char **environ;  // Declare the external environ variable
     char **env;
@@ -11,4 +11,5 @@ void	env_cmd()
         printf("%s\n", *env);
         env++;  // Move to the next environment variable
     }
+    return (0);
 }

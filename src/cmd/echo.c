@@ -1,6 +1,6 @@
 #include "../../inc/minishell.h"
 
-void	echo_cmd(t_words *cmd)
+int	echo_cmd(t_words *cmd)
 {
 	cmd = cmd->next;
 	while (cmd != NULL)
@@ -9,4 +9,5 @@ void	echo_cmd(t_words *cmd)
 		cmd = cmd->next;
 	}
     printf("\n");
+	return (1);
 }

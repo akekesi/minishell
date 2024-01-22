@@ -51,6 +51,27 @@ void	signal_handler(int sig)
 	}
 }
 
+int	cmd_check(t_words *cmd)
+{
+	if (strcmp(cmd->value, "cd") == 0)
+		return (cd_cmd(cmd));
+	else if (strcmp(cmd->value, "echo") == 0)
+		return (echo_cmd(cmd));
+	else if (strcmp(cmd->value, "env") == 0)
+		return (env_cmd(cmd));
+	else if (strcmp(cmd->value, "exit") == 0)
+		return (exit_cmd(cmd));
+	else if (strcmp(cmd->value, "export") == 0)
+		return (export_cmd(cmd));
+	else if (strcmp(cmd->value, "pwd") == 0)
+		return (pwd_cmd());
+	else if (strcmp(cmd->value, "unset") == 0)
+		return (unset_cmd(cmd));
+	else
+		return (0);
+	return (1);
+}
+
 /**
  * signal(SIGINT, signal_handler); -> Handle Ctrl-C
  * signal(SIGQUIT, SIG_IGN);       -> Ignore Ctrl-\
@@ -69,22 +90,10 @@ int	main(int ac, char **av, char **envp)
 		cmd = parse_input(input);
 		while (cmd != NULL)
 		{
-			if (strcmp(cmd->value, "cd") == 0)
-				cd_cmd(cmd);
-			else if (strcmp(cmd->value, "echo") == 0)
-				echo_cmd(cmd);
-			else if (strcmp(cmd->value, "env") == 0)
-				env_cmd(cmd);
-			else if (strcmp(cmd->value, "exit") == 0)
-				exit_cmd(cmd);
-			else if (strcmp(cmd->value, "export") == 0)
-				export_cmd(cmd);
-			else if (strcmp(cmd->value, "pwd") == 0)
-				pwd_cmd();
-			else if (strcmp(cmd->value, "unset") == 0)
-				unset_cmd(cmd);
-			else
-				printf("-->%s\n", cmd->value);
+			if (cmd_check(cmd) == 1)
+				cmd = cmd->next;
+			// else
+			// 	printf("-->%s\n", cmd->value);
 			cmd = cmd->next;
 		}
 		// execute_command(cmd);

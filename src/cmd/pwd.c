@@ -1,6 +1,6 @@
 #include "../../inc/minishell.h"
 
-void    pwd_cmd()
+int    pwd_cmd()
 {
     // char cwd[PATH_MAX];
     char cwd[MAX_PATH_SIZE];
@@ -10,5 +10,5 @@ void    pwd_cmd()
         perror("getcwd() error");
         // return 1;
     }
-    // return 0;
+    return (0);
 }
