@@ -8,29 +8,24 @@ t_words *parse_input(char* input)
 	char buffer[MAX_ARG_SIZE];
 	int i;
 	int	j;
-	int	quote_flag;
+    int single_quote_flag = 0;
+	int	double_quote_flag = 0;
 
 	head = NULL;
 	current = NULL;
 	new_node = (t_words *)malloc(sizeof(t_words));
 	i = 0;
 	j = 0;
-	quote_flag = 0;
+	single_quote_flag = 0;
 	while (input[i])
 	{
-		if (input[i] == '\'')
-		{
-			if (quote_flag == 1)
-				quote_flag = 0;
-			else
-				quote_flag = 1;
-		}
-		else if (input[i] != ' ' || quote_flag == 1)
-		{
-			buffer[j] = input[i];
-			j++;
-		}
-		else if (j > 0 && quote_flag == 0)
+		if (input[i] == '\'' && double_quote_flag == 0)
+			single_quote_flag = !single_quote_flag;
+		else if (input[i] == '\"' && single_quote_flag == 0)
+			double_quote_flag = !double_quote_flag;
+		else if (input[i] != ' ' || single_quote_flag || double_quote_flag)
+			buffer[j++] = input[i];
+		else if (j > 0 && !single_quote_flag && !double_quote_flag)
 		{
 			buffer[j] = '\0';	
 			new_node = (t_words *)malloc(sizeof(t_words));
