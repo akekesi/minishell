@@ -1,0 +1,10 @@
+# vscode
+.vscode/*
+
+# object files
+*.o
+*.obj
+
+# executables
+*.exe
+*.out
