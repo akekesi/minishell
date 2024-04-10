@@ -42,6 +42,8 @@ void			signal_handler(int signal);
 
 // parser_*.c
 t_llist			*parser(char *str);
+char			**get_cmd(t_llist **tokens);
+int				get_cmd_len(t_llist **tokens);
 
 // llist_00.c
 t_llist			*llist_create(void *data);

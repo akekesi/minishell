@@ -25,7 +25,9 @@ void	llist_print(t_llist *head, void(*print_data)(void *))
 
 	if (!head)
 	{
+		printf("-\n");
 		printf("head is empty\n");
+		printf("-\n");
 		return ;
 	}
 	tmp = head;
