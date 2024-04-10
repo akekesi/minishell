@@ -14,6 +14,7 @@ SRCS = main.c \
 	llist_00.c \
 	llist_01.c \
 	token_00.c \
+	string_00.c \
 	parser_00.c \
 	ft_func.c
 

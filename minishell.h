@@ -30,6 +30,7 @@ int				ft_strlen_to_next(char *str);
 
 t_llist			*ft_strsplit(char *str, char delimiter);
 char			*ft_strget(char *str, int start, int end);
+char			*ft_strcat(char *str1, char *str2);
 void			ft_strprint(void *data);
 
 int				ft_isspace(char c);
@@ -59,5 +60,9 @@ void			llist_print(t_llist *head, void(*print_data)(void *));
 t_token			*token_create(char *token, char *type);
 void			token_print(void *data);
 void			token_free(void *data);
+
+// string_00.c
+char			**string_2d_init(int n);
+void			string_2d_free(char **str, int n);
 
 #endif

@@ -193,15 +193,22 @@ int	get_cmd_len(t_llist **head)
 
 char **get_cmd(t_llist **head)
 {
+	int		i;
+	int		n;
 	int		flag;
 	char	*str;
+	char	*str_tmp;
+	char	**cmd;
 	t_llist	*tmp;
 	t_llist	*node;
 	t_token	*token;
 
+	n = get_cmd_len(head);
+	cmd = string_2d_init(n);
 	printf("cmd:\n");
 	if (!*head)
 		return (NULL);
+	i = 0;
 	flag = 0;
 	str = NULL;
 	tmp = *head;
@@ -215,15 +222,19 @@ char **get_cmd(t_llist **head)
 			if (str)
 			{
 				// add str to char ** if str != empty
-				printf("\n");
+				cmd[i] = str; // hogy kell atadni???
+				printf("%s\n", cmd[i]);
+				i++;
+				free(str);
 				str = NULL;
 			}
 		}
 		else
 		{
 			// concatenate str
-			str = token->text;
-			printf("%s", str);
+			str_tmp = str; // hogy kell atadni???
+			str = ft_strcat(str_tmp, token->text);
+			free(str_tmp);
 		}
 		tmp = tmp->next;
 		node = llist_del(&tmp);
@@ -234,8 +245,11 @@ char **get_cmd(t_llist **head)
 	if (str)
 	{
 		// add str to char ** if str != empty
-		printf("\n");
+		cmd[i] = str; // hogy kell atadni???
+		printf("%s\n", cmd[i]);
+		free(str);
 	}
 	*head = tmp;
+	string_2d_free(cmd, n); // only for testing
 	return (NULL);
 }

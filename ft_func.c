@@ -113,6 +113,34 @@ char	*ft_strget(char *str, int start, int end)
 	return (str_part);
 }
 
+char	*ft_strcat(char *str1, char *str2)
+{
+	int		i;
+	int		n1;
+	int		n2;
+	char	*str;
+
+	n1 = ft_strlen(str1);
+	n2 = ft_strlen(str2);
+	str = (char *)malloc(sizeof(char) * (n1 + n2 + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (i < n1)
+	{
+		str[i] = str1[i];
+		i++;
+	}
+	i = 0;
+	while (i < n2)
+	{
+		str[n1 + i] = str2[i];
+		i++;
+	}
+	str[n1 + i] = '\0';
+	return (str);
+}
+
 void	ft_strprint(void *data)
 {
 	char	*str;
