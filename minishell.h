@@ -18,7 +18,7 @@ typedef struct s_llist
 
 typedef struct s_token
 {
-	char	*text;
+	char	*string;
 	char	*type;
 }	t_token;
 
@@ -45,6 +45,15 @@ void			signal_handler(int signal);
 t_llist			*parser(char *str);
 char			**get_cmd(t_llist **tokens);
 int				get_cmd_len(t_llist **tokens);
+
+int				parser_space(t_llist **input_llist, char *input_str, int i);
+int				parser_quote_s(t_llist **input_llist, char *input_str, int i);
+int				parser_quote_d(t_llist **input_llist, char *input_str, int i);
+int				parser_redir_t(t_llist **input_llist, char *input_str, int i);
+int				parser_redir_f(t_llist **input_llist, char *input_str, int i);
+int				parser_bar(t_llist **input_llist, char *input_str, int i);
+int				parser_and(t_llist **input_llist, char *input_str, int i);
+int				parser_string(t_llist **input_llist, char *input_str, int i);
 
 // llist_00.c
 t_llist			*llist_create(void *data);
