@@ -17,6 +17,7 @@ SRCS = main.c \
 	string_00.c \
 	parser_00.c \
 	parser_01.c \
+	command_00.c \
 	ft_func.c
 
 OBJS = $(SRCS:.c=.o)

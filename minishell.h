@@ -32,6 +32,7 @@ t_llist			*ft_strsplit(char *str, char delimiter);
 char			*ft_strget(char *str, int start, int end);
 char			*ft_strcat(char *str1, char *str2);
 void			ft_strprint(void *data);
+void			ft_strfree(void *data);
 
 int				ft_isspace(char c);
 int				ft_isredir(char c);
@@ -42,9 +43,7 @@ int				ft_islogic(char c);
 void			signal_handler(int signal);
 
 // parser_*.c
-t_llist			*parser(char *str);
-char			**get_cmd(t_llist **tokens);
-int				get_cmd_len(t_llist **tokens);
+void			parser(t_llist **input_llist, char *input_str);
 
 int				parser_space(t_llist **input_llist, char *input_str, int i);
 int				parser_quote_s(t_llist **input_llist, char *input_str, int i);
@@ -54,6 +53,12 @@ int				parser_redir_f(t_llist **input_llist, char *input_str, int i);
 int				parser_bar(t_llist **input_llist, char *input_str, int i);
 int				parser_and(t_llist **input_llist, char *input_str, int i);
 int				parser_string(t_llist **input_llist, char *input_str, int i);
+
+// command_*.c
+char			**cmd_get(t_llist **tokens);
+int				cmd_len(t_llist **tokens);
+char			*cmd_access(t_llist *paths, char *cmd);
+void			cmd_execute(char *cmd, char **args, char **envp);
 
 // llist_00.c
 t_llist			*llist_create(void *data);
@@ -72,6 +77,7 @@ void			token_free(void *data);
 
 // string_00.c
 char			**string_2d_init(int n);
-void			string_2d_free(char **str, int n);
+void			string_2d_print(char **str);
+void			string_2d_free(char **str);
 
 #endif

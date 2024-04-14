@@ -14,7 +14,6 @@ int	parser_space(t_llist **input_llist, char *input_str, int i)
 	token = token_create(string, type);
 	node = llist_create(token);
 	llist_add(input_llist, node);
-
 	return (i);
 }
 
@@ -63,7 +62,6 @@ int	parser_quote_d(t_llist **input_llist, char *input_str, int i)
 	node = llist_create(token);
 	llist_add(input_llist, node);
 	i += j + 1;
-
 	return (i);
 }
 
@@ -87,7 +85,6 @@ int	parser_redir_t(t_llist **input_llist, char *input_str, int i)
 	node = llist_create(token);
 	llist_add(input_llist, node);
 	i += j;
-
 	return (i);
 }
 
@@ -111,7 +108,6 @@ int	parser_redir_f(t_llist **input_llist, char *input_str, int i)
 	node = llist_create(token);
 	llist_add(input_llist, node);
 	i += j;
-
 	return (i);
 }
 
@@ -135,7 +131,6 @@ int	parser_bar(t_llist **input_llist, char *input_str, int i)
 	node = llist_create(token);
 	llist_add(input_llist, node);
 	i += j;
-
 	return (i);
 }
 
@@ -159,7 +154,6 @@ int	parser_and(t_llist **input_llist, char *input_str, int i)
 	node = llist_create(token);
 	llist_add(input_llist, node);
 	i += j;
-
 	return (i);
 }
 
@@ -182,6 +176,5 @@ int	parser_string(t_llist **input_llist, char *input_str, int i)
 	node = llist_create(token);
 	llist_add(input_llist, node);
 	i += j;
-
 	return (i);
 }

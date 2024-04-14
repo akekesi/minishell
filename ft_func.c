@@ -12,8 +12,10 @@ int	ft_strlen(char *str)
 	return (i);
 }
 
-/*
-how many char before c
+/* how many char before c
+returns:
+	i (pos.): number of character before c
+	i (neg.): number of character before \0
 */
 int	ft_strlen_to_char(char *str, char c)
 {
@@ -31,6 +33,11 @@ int	ft_strlen_to_char(char *str, char c)
 	return (i);
 }
 
+/* how many char before space
+returns:
+	i (pos.): number of character before space
+	i (neg.): number of character before \0
+*/
 int	ft_strlen_to_space(char *str)
 {
 	int	i;
@@ -47,6 +54,11 @@ int	ft_strlen_to_space(char *str)
 	return (i);
 }
 
+/* how many char before space or redir or quote or logic
+returns:
+	i (pos.): number of character before space or redir or quote or logic
+	i (neg.): number of character before \0
+*/
 int	ft_strlen_to_next(char *str)
 {
 	int	i;
@@ -86,14 +98,14 @@ t_llist	*ft_strsplit(char *str, char delimiter)
 		if (str[i])
 			i++;
 	}
-	// llist_print(split, strprint);
 	return split;
 }
 
-/*
-str:
-start:	included
-end:	not included --> \0
+/* get part of string
+args:
+	str:	string
+	start:	first character (included)
+	end:	last character (not included --> \0)
 */
 char	*ft_strget(char *str, int start, int end)
 {
@@ -113,6 +125,10 @@ char	*ft_strget(char *str, int start, int end)
 	return (str_part);
 }
 
+/* concatenate two strings
+returns:
+	str: concatenated string (new malloced)
+*/
 char	*ft_strcat(char *str1, char *str2)
 {
 	int		i;
@@ -147,6 +163,14 @@ void	ft_strprint(void *data)
 
 	str = (char *)data;
 	printf("%s\n", str);
+}
+
+void	ft_strfree(void *data)
+{
+	char	*str;
+
+	str = (char *)data;
+	free(str);
 }
 
 int	ft_isspace(char c)

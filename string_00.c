@@ -17,15 +17,28 @@ char	**string_2d_init(int n)
 	return (str);
 }
 
-void	string_2d_free(char **str, int n)
+void	string_2d_print(char **str)
 {
 	int	i;
 
 	i = 0;
-	while (i < n + 1)
+	while (str[i])
 	{
-		free(str[n]);
+		printf("%s\n", str[i]);
 		i++;
 	}
-	free(str);
+}
+
+void	string_2d_free(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		free(str[i]);	// free string
+		i++;
+	}
+	free(str[i]); 		// free last string = NULL
+	free(str);			// free str
 }
