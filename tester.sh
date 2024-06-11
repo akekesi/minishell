@@ -11,7 +11,7 @@ run_test()
 
     echo -n "Running test $test_name... "
 
-    actual_output=$($SHELL_PROGRAM $command_to_run)
+    actual_output=$($SHELL_PROGRAM | $command_to_run)
 
     if [ "$actual_output" = "$expected_output" ]; then
         echo "$(tput setaf 2)OK$(tput sgr0)"  # Green color for OK
@@ -24,8 +24,8 @@ run_test()
 
 # Tests
 run_test "cd" "minishell> " "cd ../../../../../.."
-run_test "Echo" "minishell> " "echo"
-run_test "Test 3" "minishell> " "pwd: ~"
-run_test "Test 4" "minishell> " "pwd: ~/Desktop"
+run_test "echo" "minishell> " "echo"
+run_test "pwd 1" "minishell> " "pwd: ~"
+run_test "pwd 2" "minishell> " "pwd: ~/Desktop"
 
 # echo "Testing complete."
