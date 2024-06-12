@@ -9,7 +9,7 @@ make re &> /dev/null
 
 # check success of make re
 if [ $? -eq 0 ]; then
-  if [ $1 == "valgrind" ]; then
+  if [ "$1" == "valgrind" ]; then
     # run executable with valgrind
     echo "valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=valgrind.supp ./minishell"
     valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=valgrind.supp ./minishell
