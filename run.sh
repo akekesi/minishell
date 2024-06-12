@@ -9,9 +9,15 @@ make re &> /dev/null
 
 # check success of make re
 if [ $? -eq 0 ]; then
-  # run executable with valgrind
-  echo "valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=valgrind.supp ./minishell"
-  valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=valgrind.supp ./minishell
+  if [ $1 == "valgrind" ]; then
+    # run executable with valgrind
+    echo "valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=valgrind.supp ./minishell"
+    valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --suppressions=valgrind.supp ./minishell
+  else
+    # run executable
+    echo "./minishell"
+    ./minishell
+  fi
 else
   echo "Error: make failed"
 fi
