@@ -28,8 +28,7 @@ int	cmd_len(t_llist **head)
 			{
 				n++;
 				flag = 1;
-			}
-				
+			}	
 		}
 		tmp = tmp->next;
 		if (flag == -1 || tmp == *head)
@@ -116,17 +115,20 @@ char	*cmd_access(t_llist *paths, char *cmd)
 void	cmd_execute(char *cmd, char **args, char **envp)
 {
 	int		i;
+	// int		j;
 	char	*cmd_;
 	char	*path;
 	t_llist	*paths;
 
 	i = 0;
+	// j = strlen(args);
 	while (1)
 	{
 		if (!strncmp(envp[i], "PATH=", 5))
 			break;
 		if (envp[i] == NULL)
 			break;
+		// printf("envp[%d] = %s\n", i, envp[i]);
 		i++;
 	}
 	paths = ft_strsplit(&(envp[i])[5], ':');
@@ -142,8 +144,29 @@ void	cmd_execute(char *cmd, char **args, char **envp)
 		perror("fork");
 		exit(EXIT_FAILURE);
 	}
-	if (pid == 0)
-		execve(path, args, envp);
+	// if (pid == 0)
+	// 	execve(path, args, envp);
 	waitpid(pid, NULL, WUNTRACED);
+
+	// Taka add start
+	// printf("--Taka add start------------------------\n");
+	if (!strcmp(cmd, "cd"))
+		cd_cmd(args);
+	else if (!strcmp(cmd, "echo"))
+		echo_cmd(args);
+	else if (!strcmp(cmd, "env"))
+		env_cmd();
+	else if (!strcmp(cmd, "exit"))
+		exit(0);
+		// exit_cmd();
+	else if (!strcmp(cmd, "export"))
+		export_cmd(args);
+	else if (!strcmp(cmd, "pwd"))
+		pwd_cmd();
+	else if (!strcmp(cmd, "unset"))
+		unset_cmd(args);
+	// printf("--Taka add end--------------------------\n");
+	// Taka add end
+
 	free(path);
 }

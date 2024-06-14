@@ -8,6 +8,13 @@
 # include <stdlib.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <termios.h>
+
+# define MAX_INPUT_SIZE	1024
+# define MAX_ARG_SIZE	64
+# define MAX_PATH_SIZE	256
+# define PATH_MAX		4096
+# define MAX_HISTORY 	1000
 
 typedef struct s_llist
 {
@@ -21,6 +28,13 @@ typedef struct s_token
 	char	*string;
 	char	*type;
 }	t_token;
+
+typedef struct s_history
+{
+    char *commands[MAX_HISTORY];
+    int count;
+	int current_history_index;
+}	t_history;
 
 // ft_func.c
 int				ft_strlen(char *str);
@@ -59,6 +73,13 @@ char			**cmd_get(t_llist **tokens);
 int				cmd_len(t_llist **tokens);
 char			*cmd_access(t_llist *paths, char *cmd);
 void			cmd_execute(char *cmd, char **args, char **envp);
+int				cd_cmd(char **args);
+int				echo_cmd(char **args);
+int				env_cmd();
+int				exit_cmd();
+int				export_cmd(char **args);
+int				pwd_cmd();
+int				unset_cmd(char **args);
 
 // llist_00.c
 t_llist			*llist_create(void *data);
@@ -79,5 +100,16 @@ void			token_free(void *data);
 char			**string_2d_init(int n);
 void			string_2d_print(char **str);
 void			string_2d_free(char **str);
+
+// history_00.c
+void			init_history(t_history *history);
+void			add_to_history(t_history *history, const char *command);
+void			show_history(t_history *history);
+void			free_history(t_history *history);
+
+// history_01.c
+void			enable_raw_mode(struct termios *orig_termios);
+void			disable_raw_mode(struct termios *orig_termios);
+char 			*check_each_history(t_history *history);
 
 #endif
