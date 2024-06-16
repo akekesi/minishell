@@ -9,12 +9,16 @@
 # include <signal.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <fcntl.h>
+# include <string.h>
 
 # define MAX_INPUT_SIZE	1024
 # define MAX_ARG_SIZE	64
 # define MAX_PATH_SIZE	256
 # define PATH_MAX		4096
 # define MAX_HISTORY 	1000
+# define TOKEN_BUFSIZE	64
+# define TOKEN_DELIMITERS	" \t\r\n\a"
 
 typedef struct s_llist
 {
@@ -35,6 +39,19 @@ typedef struct s_history
     int count;
 	int current_history_index;
 }	t_history;
+
+// t_history history;
+
+// Built-in command functions
+int my_cd(char **args);
+int my_help();
+int my_exit();
+int my_echo(char **args);
+int my_pwd();
+int my_export(char **args);
+int my_unset(char **args);
+int my_env();
+// int my_history(char **args);
 
 // ft_func.c
 int				ft_strlen(char *str);
@@ -80,6 +97,18 @@ int				exit_cmd();
 int				export_cmd(char **args);
 int				pwd_cmd();
 int				unset_cmd(char **args);
+int				execute(char **args);
+int			 	execute_with_pipes(char **args);
+int 			launch(char **args);
+int 			num_builtins();
+// int 			my_cd(char **args);
+// int 			my_help(char **args);
+// int 			my_exit(char **args);
+// int 			my_echo(char **args);
+// int 			my_pwd(char **args);
+// int 			my_export(char **args);
+// int 			my_unset(char **args);
+// int 			my_env(char **args);
 
 // llist_00.c
 t_llist			*llist_create(void *data);
