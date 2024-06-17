@@ -9,6 +9,7 @@
 # include <signal.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <pwd.h>
 
 # define MAX_INPUT_SIZE	1024
 # define MAX_ARG_SIZE	64

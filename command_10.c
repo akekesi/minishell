@@ -1,10 +1,47 @@
 #include "minishell.h"
 
+char *expand_home_directory(char *path) {
+    if (path[0] == '~') {
+        char *home_dir = getenv("HOME");
+        if (!home_dir) {
+            struct passwd *pw = getpwuid(getuid());
+            home_dir = pw->pw_dir;
+        }
+        if (!home_dir) {
+            fprintf(stderr, "Error: HOME environment variable is not set.\n");
+            return NULL;
+        }
+        // Allocate space for the new path
+        char *expanded_path = malloc(strlen(home_dir) + strlen(path));
+        if (!expanded_path) {
+            perror("malloc");
+            return NULL;
+        }
+        // Copy the home directory and the rest of the path
+        strcpy(expanded_path, home_dir);
+        strcat(expanded_path, path + 1);  // Skip the '~' character
+        return expanded_path;
+    }
+    // If path doesn't start with '~', return a copy of the original path
+    return strdup(path);
+}
+
 void	cd_cmd(char **args)
 {
-	if (chdir(args[1]) != 0) {
-        perror("chdir failed");
+    char *path = args[1];
+    if (!path || strcmp(path, "~") == 0) {
+        path = "~";
     }
+    char *expanded_path = expand_home_directory(path);
+    if (!expanded_path) {
+        return ;
+    }
+    if (chdir(expanded_path) != 0) {
+        perror("chdir failed");
+        free(expanded_path);
+        return ;
+    }
+    free(expanded_path);
 }
 
 void	echo_cmd(char **args)
