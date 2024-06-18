@@ -37,6 +37,13 @@ typedef struct s_history
 	int current_history_index;
 }	t_history;
 
+typedef struct s_command
+{
+    char    **args;
+    int     in_fd;
+    int     out_fd;
+}   t_command;
+
 // ft_func.c
 int				ft_strlen(char *str);
 int				ft_strlen_to_char(char *str, char c);
@@ -70,10 +77,10 @@ int				parser_and(t_llist **input_llist, char *input_str, int i);
 int				parser_string(t_llist **input_llist, char *input_str, int i);
 
 // command_*.c
-char			**cmd_get(t_llist **tokens);
+t_command		*cmd_get(t_llist **tokens);
 int				cmd_len(t_llist **tokens);
 char			*cmd_access(t_llist *paths, char *cmd);
-void			cmd_execute(char *cmd, char **args, char **envp, t_history *history);
+void			cmd_execute(t_command *cmd, char **envp, t_history *history);
 void			cd_cmd(char **args);
 void			echo_cmd(char **args);
 void			env_cmd();

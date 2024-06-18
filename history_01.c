@@ -30,14 +30,11 @@ char *check_each_history(t_history *history) {
     int command_length = 0;
     char c;
     char command[1024];
-    // const char *prompt = "minishell$ ";
 
     memset(command, 0, sizeof(command));
     fflush(stdout);
-
     while (1) {
         read(STDIN_FILENO, &c, 1);
-
         if (c == '\n') {
             command[command_length] = '\0';
             printf("\n");
@@ -55,7 +52,6 @@ char *check_each_history(t_history *history) {
             char seq[2];
             if (read(STDIN_FILENO, &seq[0], 1) != 1) continue;
             if (read(STDIN_FILENO, &seq[1], 1) != 1) continue;
-
             if (seq[0] == '[') {
                 if (seq[1] == 'A') {  // Up arrow
                     if (history->current_history_index > 0) {
@@ -99,7 +95,6 @@ char *check_each_history(t_history *history) {
             }
         }
     }
-
     if (strlen(command) > 0) {
         add_to_history(history, command);
     }

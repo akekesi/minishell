@@ -2,8 +2,10 @@
 
 void main_loop (t_llist **input_llist, t_history *history, char **envp)
 {
-	char	*input_str;
-	char	**cmd;
+	char		*input_str;
+    t_command	*cmd;
+    int 		pipe_fds[2];
+    int 		last_pipe_read_fd = -1;
 
 	while(1)
 	{
@@ -11,15 +13,10 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 		printf("minishell$ ");
         fflush(stdout);
 		input_str = check_each_history(history);
-		// printf("input_str is %s\n", input_str);
-
-        // Process input
-        // input_str = strdup(command);
 		if (!input_str) {
             perror("strdup");
             break;
         }
-
 		// pareser
 		parser(input_llist, input_str);
 		// printf("parser:\n");
@@ -27,22 +24,53 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 
 		while (*input_llist)
 		{
+			// handle pipes
+            if (pipe(pipe_fds) == -1)
+            {
+                perror("pipe");
+                exit(EXIT_FAILURE);
+            }
+
 			// get command
 			cmd = cmd_get(input_llist);
+			if (!*input_llist)
+                cmd->out_fd = STDOUT_FILENO; // last command output to stdout which is 1
+			else
+                cmd->out_fd = pipe_fds[1];
+            if (last_pipe_read_fd != -1)
+                cmd->in_fd = last_pipe_read_fd;
 			// printf("get command:\n");
 			// string_2d_print(cmd);
-
 			// execute command
+			// printf("cmd->out_fd: %d\n", cmd->out_fd);
+			if (cmd->out_fd == 1) // not equal to 1
+				cmd_execute(cmd, envp, history);
 			// printf("execute command:\n");
-			cmd_execute(cmd[0], cmd, envp, history);
-
-			string_2d_free(cmd);
+			if (cmd->out_fd != STDIN_FILENO) // not equal to 1
+            {
+                close(pipe_fds[1]);
+                last_pipe_read_fd = pipe_fds[0];
+            }
+            else
+            {
+                if (last_pipe_read_fd != -1) {
+                    close(last_pipe_read_fd);
+                }
+                last_pipe_read_fd = -1; // reset last_out_fd for the next set of commands
+            }
+            string_2d_free(cmd->args);
+			free(cmd);
 		}
+
+        if (last_pipe_read_fd != -1) // close the remaining file descriptor if any
+        {
+            close(last_pipe_read_fd);
+            last_pipe_read_fd = -1;
+        }
 		history->current_history_index = history->count;
 		// free_llist(input_llist);
 		free(input_str);
 	}
-
     free_history(history);
 }
 

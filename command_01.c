@@ -51,25 +51,28 @@ void	echo_cmd(char **args)
     
     i = 1;
     n_flag = 0;
+    if (args[i] && strcmp(args[i], "-n") == 0) {
+        n_flag = 1;
+        i++;
+    }
 	while (args[i] != NULL)
 	{
-        if (strcmp(args[i], "-n") == 0)
-        {
-            i++;
-            n_flag = 1;
-            continue;
-        }
-        if (n_flag)
-        {
+        if (args[i][0] == '$') {
+            char *env_var = getenv(args[i] + 1);
+            if (env_var) {
+                printf("%s", env_var);
+            }
+        } else {
             printf("%s", args[i]);
-            break;
         }
-        else
-        {
-            printf("%s \n", args[i]);
-            break;
+        if (args[i + 1]) {
+            printf(" ");
         }
+        i++;
 	}
+    if (!n_flag) {
+        printf("\n");
+    }
 }
 
 void	env_cmd()
