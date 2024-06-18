@@ -174,7 +174,8 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
             close(cmd->out_fd);
         }
         execve(path, cmd->args, envp);
-        perror(cmd->args[0]);
+		printf("%s: command not found\n", cmd->args[0]);
+        // perror(cmd->args[0]);
         exit(EXIT_FAILURE);
     }
     else
