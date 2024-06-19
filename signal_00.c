@@ -10,3 +10,14 @@ void	signal_handler(int signal)
 		rl_redisplay();
 	}
 }
+
+void	handle_sigint(int signal) {
+    (void)signal;
+    printf("\nminishell$ ");
+    fflush(stdout);
+}
+
+void	handle_sigquit(int signal) {
+    (void)signal;
+    // Do nothing
+}

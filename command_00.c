@@ -138,7 +138,6 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
         return unset_cmd(cmd->args);
     else if (!strcmp(cmd->args[0], "history"))
         return show_history(history);
-
     i = 0;
     while (1)
     {

@@ -63,6 +63,8 @@ int				ft_islogic(char c);
 
 // signal_*.c
 void			signal_handler(int signal);
+void	handle_sigint(int signal);
+void	handle_sigquit(int signal);
 
 // parser_*.c
 void			parser(t_llist **input_llist, char *input_str);

@@ -3,13 +3,26 @@
 void main_loop (t_llist **input_llist, t_history *history, char **envp)
 {
 	char		*input_str;
+	char		*readline_str;
     t_command	*cmd;
     int 		pipe_fds[2];
     int 		last_pipe_read_fd = -1;
+	/**
+	 * Set up signal handlers
+	 * ◦ ctrl-C displays a new prompt on a new line.
+	 * ◦ ctrl-D exits the shell.
+	 * ◦ ctrl-\ does nothing.
+	 */
+    signal(SIGINT, handle_sigint);
+    signal(SIGQUIT, handle_sigquit);
 
 	while(1)
 	{
-        // input_str = readline("minishell$ ");
+        readline_str = readline("minishell$ ");
+		if (!readline_str) { // Ctrl + D (EOF)
+            printf("exit\n");
+            break;
+        }
 		printf("minishell$ ");
         fflush(stdout);
 		input_str = check_each_history(history);
@@ -61,7 +74,7 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
             string_2d_free(cmd->args);
 			free(cmd);
 		}
-
+		// while (wait(NULL) > 0); // wait for all child processes to finish
         if (last_pipe_read_fd != -1) // close the remaining file descriptor if any
         {
             close(last_pipe_read_fd);
@@ -70,6 +83,7 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 		history->current_history_index = history->count;
 		// free_llist(input_llist);
 		free(input_str);
+		free(readline_str);
 	}
     free_history(history);
 }
