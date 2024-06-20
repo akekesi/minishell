@@ -120,6 +120,7 @@ void			free_history(t_history *history);
 // history_01.c
 void			enable_raw_mode(struct termios *orig_termios);
 void			disable_raw_mode(struct termios *orig_termios);
+// void 			check_each_history(t_history *history);
 char 			*check_each_history(t_history *history);
 
 #endif

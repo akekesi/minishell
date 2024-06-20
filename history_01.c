@@ -22,7 +22,8 @@ void refresh_line(const char *buffer, int index) {
     fflush(stdout);
 }
 
-char *check_each_history(t_history *history) {
+// void    check_each_history(t_history *history) {
+char	*check_each_history(t_history *history) {
     struct termios orig_termios;
     enable_raw_mode(&orig_termios);
 
@@ -83,6 +84,14 @@ char *check_each_history(t_history *history) {
                         refresh_line(command, index);
                     }
                 }
+            }
+        }
+        else if (c == 4) // Ctrl+D
+        {
+            if (command_length == 0)
+            {
+                disable_raw_mode(&orig_termios);
+                return NULL;
             }
         } else {
             if (command_length < (int)sizeof(command) - 1) {  // Cast sizeof(command) to int
