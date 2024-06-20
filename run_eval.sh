@@ -16,7 +16,13 @@ if [ $? -eq 0 ]; then
   else
     # run executable
     echo "./minishell"
-    ./minishell
+    ./minishell <<EOF
+echo a > a.txt
+echo b | echo c
+echo d | echo e | echo f
+history
+exit
+EOF
   fi
 else
   echo "Error: make failed"

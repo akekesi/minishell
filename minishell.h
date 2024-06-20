@@ -10,6 +10,7 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <pwd.h>
+# include <fcntl.h>
 
 # define MAX_INPUT_SIZE	1024
 # define MAX_ARG_SIZE	64
@@ -32,9 +33,9 @@ typedef struct s_token
 
 typedef struct s_history
 {
-    char *commands[MAX_HISTORY];
-    int count;
-	int current_history_index;
+    char	*commands[MAX_HISTORY];
+    int		count;
+	int		current_history_index;
 }	t_history;
 
 typedef struct s_command
@@ -42,6 +43,11 @@ typedef struct s_command
     char    **args;
     int     in_fd;
     int     out_fd;
+    char	*input_file;
+    char	*output_file;
+    int		append; // 0 for '>', 1 for '>>'
+    int 	heredoc; // 0 for normal, 1 for heredoc (<<)
+    char	*heredoc_delimiter;
 }   t_command;
 
 // ft_func.c
@@ -63,8 +69,8 @@ int				ft_islogic(char c);
 
 // signal_*.c
 void			signal_handler(int signal);
-void	handle_sigint(int signal);
-void	handle_sigquit(int signal);
+void			handle_sigint(int signal);
+void			handle_sigquit(int signal);
 
 // parser_*.c
 void			parser(t_llist **input_llist, char *input_str);
