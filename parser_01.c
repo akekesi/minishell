@@ -75,12 +75,12 @@ int	parser_redir_t(t_llist **input_llist, char *input_str, int i)
 
 	j = 1;
 	type = "redir_to_w";
-	if (input_str[i + 1] == '>')
+	if (input_str[i+1] == '>')
 	{
 		j = 2;
 		type = "redir_to_a";
 	}
-	string = ft_strget(input_str, i, i + j);
+	string = ft_strget(input_str, i, i+j);
 	token = token_create(string, type);
 	node = llist_create(token);
 	llist_add(input_llist, node);
@@ -98,12 +98,12 @@ int	parser_redir_f(t_llist **input_llist, char *input_str, int i)
 
 	j = 1;
 	type = "redir_from_r";
-	if (input_str[i + 1] == '<')
+	if (input_str[i+1] == '<')
 	{
 		j = 2;
 		type = "redir_from_d";
 	}
-	string = ft_strget(input_str, i, i + j);
+	string = ft_strget(input_str, i, i+j);
 	token = token_create(string, type);
 	node = llist_create(token);
 	llist_add(input_llist, node);

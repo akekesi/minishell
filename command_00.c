@@ -115,37 +115,12 @@ char	*cmd_access(t_llist *paths, char *cmd)
 	}
 }
 
-void handle_heredoc(t_command *cmd) {
-    char buffer[1024];
-    int tmp_fd = open("/tmp/heredoc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (tmp_fd < 0) {
-        perror("open");
-        return;
-    }
-
-    while (1) {
-        printf("> ");
-        fgets(buffer, sizeof(buffer), stdin);
-        if (strncmp(buffer, cmd->heredoc_delimiter, strlen(cmd->heredoc_delimiter)) == 0 &&
-            buffer[strlen(cmd->heredoc_delimiter)] == '\n') {
-            break;
-        }
-        write(tmp_fd, buffer, strlen(buffer));
-    }
-
-    close(tmp_fd);
-    cmd->input_file = strdup("/tmp/heredoc_tmp");
-}
-
 void cmd_execute(t_command *cmd, char **envp, t_history *history)
 {
     int i;
     char *cmd_;
     char *path;
     t_llist *paths;
-
-    int in_fd = STDIN_FILENO;
-    int out_fd = STDOUT_FILENO;
 
     if (!strcmp(cmd->args[0], "cd"))
         return cd_cmd(cmd->args);
@@ -210,48 +185,5 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
             close(cmd->out_fd);
         waitpid(pid, NULL, 0);
     }
-
-    // Handle input redirection
-    if (cmd->input_file) {
-        in_fd = open(cmd->input_file, O_RDONLY);
-        if (in_fd < 0) {
-            perror("open");
-            return;
-        }
-    }
-
-    // Handle heredoc
-    if (cmd->heredoc) {
-        handle_heredoc(cmd);
-    }
-     // Handle output redirection
-    if (cmd->output_file) {
-        int flags = O_WRONLY | O_CREAT | (cmd->append ? O_APPEND : O_TRUNC);
-        out_fd = open(cmd->output_file, flags, 0644);
-        if (out_fd < 0) {
-            perror("open");
-            return;
-        }
-    }
-
-    if (fork() == 0) {
-        if (in_fd != STDIN_FILENO) {
-            dup2(in_fd, STDIN_FILENO);
-            close(in_fd);
-        }
-        if (out_fd != STDOUT_FILENO) {
-            dup2(out_fd, STDOUT_FILENO);
-            close(out_fd);
-        }
-        execve(cmd->args[0], cmd->args, envp);
-        perror("execve");
-        exit(EXIT_FAILURE);
-    }
-
-    if (in_fd != STDIN_FILENO) close(in_fd);
-    if (out_fd != STDOUT_FILENO) close(out_fd);
-
-    wait(NULL);
-
     free(path);
 }

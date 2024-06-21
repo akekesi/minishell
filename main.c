@@ -10,10 +10,12 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 	/**
 	 * Set up signal handlers
 	 * ◦ ctrl-C displays a new prompt on a new line.
+	 * ◦ ctrl-D exits the shell.
 	 * ◦ ctrl-\ does nothing.
 	 */
     signal(SIGINT, handle_sigint);
     signal(SIGQUIT, handle_sigquit);
+
 	while(1)
 	{
         // input_str = readline("minishell$ ");
