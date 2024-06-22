@@ -2,6 +2,7 @@
 
 void init_history(t_history *history)
 {
+    history->last_exit_status = 0;
     history->count = 0;
     history->current_history_index = 0;
 }
@@ -29,7 +30,7 @@ void add_to_history(t_history *history, const char *command)
     }
 }
 
-void show_history(t_history *history)
+int show_history(t_history *history)
 {
     int i;
 
@@ -38,6 +39,7 @@ void show_history(t_history *history)
         printf("    %i  %s\n", i + 1, history->commands[i]);
         i++;
     }
+    return (0);
 }
 
 void free_history(t_history *history)

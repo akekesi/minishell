@@ -26,7 +26,7 @@ char *expand_home_directory(char *path) {
     return strdup(path);
 }
 
-void	cd_cmd(char **args)
+int	cd_cmd(char **args)
 {
     char *path = args[1];
     if (!path || strcmp(path, "~") == 0) {
@@ -34,17 +34,18 @@ void	cd_cmd(char **args)
     }
     char *expanded_path = expand_home_directory(path);
     if (!expanded_path) {
-        return ;
+        return (1);
     }
     if (chdir(expanded_path) != 0) {
         perror("chdir failed");
         free(expanded_path);
-        return ;
+        return (1);
     }
     free(expanded_path);
+    return (0);
 }
 
-void	echo_cmd(char **args)
+int	echo_cmd(char **args, t_history *history)
 {
     int i;
     int n_flag;
@@ -57,7 +58,9 @@ void	echo_cmd(char **args)
     }
 	while (args[i] != NULL)
 	{
-        if (args[i][0] == '$') {
+        if (strcmp(args[i], "$?") == 0) {
+            printf("%d", history->last_exit_status);
+        } else if (args[i][0] == '$') {
             char *env_var = getenv(args[i] + 1);
             if (env_var) {
                 printf("%s", env_var);
@@ -73,9 +76,10 @@ void	echo_cmd(char **args)
     if (!n_flag) {
         printf("\n");
     }
+    return (0);
 }
 
-void	env_cmd()
+int	env_cmd()
 {
     extern char **environ;  // Declare the external environ variable
     char **env;
@@ -86,9 +90,10 @@ void	env_cmd()
         printf("%s\n", *env);
         env++;  // Move to the next environment variable
     }
+    return (0);
 }
 
-void	exit_cmd(char **args)
+int	exit_cmd(char **args)
 {
     int exit_code;
     
@@ -96,11 +101,12 @@ void	exit_cmd(char **args)
     if (args[1] != NULL)
         exit_code = atoi(args[1]);
     exit(exit_code);
+    return (0);
     // printf("Exiting with status code %s\n", cmd->next->value);
     // exit(atoi(cmd->next->value));
 }
 
-void	export_cmd(char **args)
+int	export_cmd(char **args)
 {
 	// Assuming the format is "export VAR=value"
 	char* variable = strtok(args[1], "=");
@@ -116,9 +122,10 @@ void	export_cmd(char **args)
 	if (setenv(variable, value, 1) != 0) {
 		perror("setenv failed");
 	}
+    return (0);
 }
 
-void    pwd_cmd()
+int    pwd_cmd()
 {
     // char cwd[PATH_MAX];
     char cwd[MAX_PATH_SIZE];
@@ -128,12 +135,14 @@ void    pwd_cmd()
         perror("getcwd() error");
         // return 1;
     }
+    return (0);
 }
 
-void	unset_cmd(char **args)
+int	unset_cmd(char **args)
 {
 	if (unsetenv(args[1]) != 0)
 	{
 		perror("unsetenv error");
 	}
+    return (0);
 }

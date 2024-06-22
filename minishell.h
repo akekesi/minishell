@@ -32,6 +32,7 @@ typedef struct s_token
 
 typedef struct s_history
 {
+    int last_exit_status;
     char *commands[MAX_HISTORY];
     int count;
 	int current_history_index;
@@ -83,13 +84,13 @@ t_command		*cmd_get(t_llist **tokens);
 int				cmd_len(t_llist **tokens);
 char			*cmd_access(t_llist *paths, char *cmd);
 void			cmd_execute(t_command *cmd, char **envp, t_history *history);
-void			cd_cmd(char **args);
-void			echo_cmd(char **args);
-void			env_cmd();
-void			exit_cmd(char **args);
-void			export_cmd(char **args);
-void			pwd_cmd();
-void			unset_cmd(char **args);
+int				cd_cmd(char **args);
+int				echo_cmd(char **arg, t_history *history);
+int				env_cmd();
+int				exit_cmd(char **args);
+int				export_cmd(char **args);
+int				pwd_cmd();
+int				unset_cmd(char **args);
 
 // llist_00.c
 t_llist			*llist_create(void *data);
@@ -114,7 +115,7 @@ void			string_2d_free(char **str);
 // history_00.c
 void			init_history(t_history *history);
 void			add_to_history(t_history *history, const char *command);
-void			show_history(t_history *history);
+int				show_history(t_history *history);
 void			free_history(t_history *history);
 
 // history_01.c

@@ -123,67 +123,69 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
     t_llist *paths;
 
     if (!strcmp(cmd->args[0], "cd"))
-        return cd_cmd(cmd->args);
+        history->last_exit_status = cd_cmd(cmd->args);
     else if (!strcmp(cmd->args[0], "echo"))
-        return echo_cmd(cmd->args);
+        history->last_exit_status = echo_cmd(cmd->args, history);
     else if (!strcmp(cmd->args[0], "env"))
-        return env_cmd();
+        history->last_exit_status = env_cmd();
     else if (!strcmp(cmd->args[0], "exit"))
-        return exit_cmd(cmd->args);
+        history->last_exit_status = exit_cmd(cmd->args);
     else if (!strcmp(cmd->args[0], "export"))
-        return export_cmd(cmd->args);
+        history->last_exit_status = export_cmd(cmd->args);
     else if (!strcmp(cmd->args[0], "pwd"))
-        return pwd_cmd();
+        history->last_exit_status = pwd_cmd();
     else if (!strcmp(cmd->args[0], "unset"))
-        return unset_cmd(cmd->args);
+        history->last_exit_status = unset_cmd(cmd->args);
     else if (!strcmp(cmd->args[0], "history"))
-        return show_history(history);
-    i = 0;
-    while (1)
-    {
-        if (!strncmp(envp[i], "PATH=", 5))
-            break;
-        if (envp[i] == NULL)
-            break;
-        i++;
-    }
-
-    paths = ft_strsplit(&(envp[i])[5], ':');
-    cmd_ = ft_strcat("/", cmd->args[0]);
-    path = cmd_access(paths, cmd_);
-    free(cmd_);
-    llist_free(&paths, ft_strfree);
-
-    int pid = fork();
-    if (pid == -1)
-    {
-        perror("fork");
-        exit(EXIT_FAILURE);
-    }
-    if (pid == 0)
-    {
-        if (cmd->in_fd != STDIN_FILENO)
-        {
-            dup2(cmd->in_fd, STDIN_FILENO);
-            close(cmd->in_fd);
-        }
-        if (cmd->out_fd != STDOUT_FILENO)
-        {
-            dup2(cmd->out_fd, STDOUT_FILENO);
-            close(cmd->out_fd);
-        }
-        execve(path, cmd->args, envp);
-		printf("%s: command not found\n", cmd->args[0]);
-        // perror(cmd->args[0]);
-        exit(EXIT_FAILURE);
-    }
+        history->last_exit_status = show_history(history);
     else
     {
-        if (cmd->in_fd != STDIN_FILENO)
-            close(cmd->in_fd);
-        if (cmd->out_fd != STDOUT_FILENO)
-            close(cmd->out_fd);
-        waitpid(pid, NULL, 0);
+        i = 0;
+
+        while (1)
+        {
+            if (!strncmp(envp[i], "PATH=", 5))
+                break;
+            if (envp[i] == NULL)
+                break;
+            i++;
+        }
+
+        paths = ft_strsplit(&(envp[i])[5], ':');
+        cmd_ = ft_strcat("/", cmd->args[0]);
+        path = cmd_access(paths, cmd_);
+        free(cmd_);
+        llist_free(&paths, ft_strfree);
+
+        int pid = fork();
+        if (pid == 0)
+        {
+            if (cmd->in_fd != STDIN_FILENO) {
+                dup2(cmd->in_fd, STDIN_FILENO);
+                close(cmd->in_fd);
+            }
+            if (cmd->out_fd != STDOUT_FILENO) {
+                dup2(cmd->out_fd, STDOUT_FILENO);
+                close(cmd->out_fd);
+            }
+            execve(cmd->args[0], cmd->args, envp);
+            printf("%s: command not found\n", cmd->args[0]);
+            exit(127);
+        }
+        else if (pid > 0)
+        {
+            int status;
+            waitpid(pid, &status, 0);
+            if (WIFEXITED(status))
+                history->last_exit_status = WEXITSTATUS(status);
+            else if (WIFSIGNALED(status))
+                history->last_exit_status = 128 + WTERMSIG(status);
+        }
+        else
+        {
+            perror("fork");
+            history->last_exit_status = 1;
+        }
     }
-    free(path);
+    // free(path);
 }

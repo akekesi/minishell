@@ -103,7 +103,8 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 
 int	main(int argc, char **argv, char **envp)
 {
-	t_llist *input_llist;
+	t_llist			*input_llist;
+	t_history		history;
 
 	if (argc != 1)
 	{
@@ -111,12 +112,8 @@ int	main(int argc, char **argv, char **envp)
 		return (0);
 	}
 	(void) argv;
-
 	// signal(SIGINT, signal_handler);
-
 	input_llist = NULL;
-
-	t_history history;
     init_history(&history);
 	main_loop(&input_llist, &history, envp);
 
