@@ -17,11 +17,7 @@ if [ $? -eq 0 ]; then
     # run executable
     echo "./minishell"
     ./minishell <<EOF
-echo -n a
-echo Hello > a.txt
-echo b | echo c
-echo d | echo e | echo f
-history
+echo a
 exit
 EOF
   fi

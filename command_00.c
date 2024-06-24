@@ -51,11 +51,17 @@ t_command *cmd_get(t_llist **head)
 
     n = cmd_len(head);
     cmd = malloc(sizeof(t_command));
-    cmd->args = string_2d_init(n);
+    cmd->args = string_2d_init(n);  // Ensure enough space for null-termination
     cmd->in_fd = STDIN_FILENO;  // Default input is stdin
     cmd->out_fd = STDOUT_FILENO; // Default output is stdout
-    if (!*head)
+    cmd->input_file = NULL;
+    cmd->output_file = NULL;
+    cmd->append_output = 0;
+    cmd->heredoc_delimiter = NULL;
+    if (!*head) {
+        free(cmd);
         return NULL;
+    }
     i = 0;
     flag = 0;
     str = NULL;
@@ -63,10 +69,16 @@ t_command *cmd_get(t_llist **head)
     while (tmp)
     {
         token = tmp->data;
-        if (!strcmp(token->type, "pipe"))
+        if (strstr(token->type, "redir") != NULL)
+        {
+            // printf("redir\n");
+            parse_redirections(cmd, &tmp);
+            continue; // Skip processing this token further
+        }
+        else if (!strcmp(token->type, "pipe"))
         {
             flag = -1;
-            cmd->out_fd = -1; // Will be set up in main_loop
+            cmd->out_fd = -1; // set up in main_loop
         }
         else if (!strcmp(token->type, "space"))
         {
@@ -91,6 +103,7 @@ t_command *cmd_get(t_llist **head)
     }
     if (str)
         cmd->args[i] = str;
+    // cmd->args[i] = NULL;  // Null-terminate the args array
     *head = tmp;
     return cmd;
 }
@@ -119,8 +132,15 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
 {
     int i;
     char *cmd_;
-    char *path;
+    char *path = NULL;
     t_llist *paths;
+    int is_execve;
+
+    if (!cmd || !cmd->args || !cmd->args[0])
+    {
+        fprintf(stderr, "Invalid command structure.\n");
+        return;
+    }
 
     if (!strcmp(cmd->args[0], "cd"))
         history->last_exit_status = cd_cmd(cmd->args);
@@ -141,17 +161,12 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
     else
     {
         i = 0;
-
-        while (1)
-        {
-            if (!strncmp(envp[i], "PATH=", 5))
-                break;
-            if (envp[i] == NULL)
-                break;
+        while (envp[i] && strncmp(envp[i], "PATH=", 5) != 0)
             i++;
-        }
-
-        paths = ft_strsplit(&(envp[i])[5], ':');
+        if (envp[i])
+            paths = ft_strsplit(&(envp[i])[5], ':');
+        else
+            paths = NULL;
         cmd_ = ft_strcat("/", cmd->args[0]);
         path = cmd_access(paths, cmd_);
         free(cmd_);
@@ -160,17 +175,65 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
         int pid = fork();
         if (pid == 0)
         {
-            if (cmd->in_fd != STDIN_FILENO) {
-                dup2(cmd->in_fd, STDIN_FILENO);
-                close(cmd->in_fd);
+            // Handle input redirection
+            if (cmd->input_file)
+            {
+                int fd = open(cmd->input_file, O_RDONLY);
+                if (fd == -1)
+                {
+                    perror("open");
+                    exit(1);
+                }
+                dup2(fd, STDIN_FILENO);
+                close(fd);
             }
-            if (cmd->out_fd != STDOUT_FILENO) {
-                dup2(cmd->out_fd, STDOUT_FILENO);
-                close(cmd->out_fd);
+            else if (cmd->heredoc_delimiter)
+            {
+                int fd = handle_heredoc(cmd->heredoc_delimiter);
+                if (fd == -1)
+                    exit(1);
+                dup2(fd, STDIN_FILENO);
+                close(fd);
             }
-            execve(cmd->args[0], cmd->args, envp);
-            printf("%s: command not found\n", cmd->args[0]);
-            exit(127);
+            // Handle output redirection
+            if (cmd->output_file)
+            {
+                int flags = O_WRONLY | O_CREAT;
+                if (cmd->append_output)
+                    flags |= O_APPEND;
+                else
+                    flags |= O_TRUNC;
+                int fd = open(cmd->output_file, flags, 0644);
+                if (fd == -1)
+                {
+                    perror("open");
+                    exit(1);
+                }
+                dup2(fd, STDOUT_FILENO);
+                close(fd);
+            }
+            // Execute the command
+            if (strcmp(cmd->args[0], "echo") == 0)
+                exit(echo_cmd(cmd->args, history));
+            else
+            {
+                if (cmd->in_fd != STDIN_FILENO) 
+                {
+                    dup2(cmd->in_fd, STDIN_FILENO);
+                    close(cmd->in_fd);
+                }
+                if (cmd->out_fd != STDOUT_FILENO) 
+                {
+                    dup2(cmd->out_fd, STDOUT_FILENO);
+                    close(cmd->out_fd);
+                }
+                is_execve = execve(path, cmd->args, envp);
+                if (is_execve)
+                {
+                    printf("%s: command not found AAA\n", cmd->args[0]);
+                    exit(127);
+                }
+            }
         }
         else if (pid > 0)
         {
@@ -186,6 +249,7 @@ void cmd_execute(t_command *cmd, char **envp, t_history *history)
             perror("fork");
             history->last_exit_status = 1;
         }
+        if (path)
+            free(path);
     }
-    // free(path);
 }

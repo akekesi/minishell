@@ -17,6 +17,7 @@ SRCS = main.c \
 	string_00.c \
 	parser_00.c \
 	parser_01.c \
+	parser_02.c \
 	command_00.c \
 	command_01.c \
 	history_00.c \

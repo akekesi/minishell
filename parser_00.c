@@ -16,9 +16,9 @@ void	parser(t_llist **input_llist, char *input_str)
 		else if (input_str[i] == '\"')
 			i = parser_quote_d(input_llist, input_str, i);
 		else if (input_str[i] == '>')
-			i = parser_redir_t(input_llist, input_str, i);
+			i = parser_redir_right(input_llist, input_str, i);
 		else if (input_str[i] == '<')
-			i = parser_redir_f(input_llist, input_str, i);
+			i = parser_redir_left(input_llist, input_str, i);
 		else if (input_str[i] == '|')
 			i = parser_bar(input_llist, input_str, i);
 		else if (input_str[i] == '&')

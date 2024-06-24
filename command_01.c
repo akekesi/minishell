@@ -52,30 +52,29 @@ int	echo_cmd(char **args, t_history *history)
     
     i = 1;
     n_flag = 0;
-    if (args[i] && strcmp(args[i], "-n") == 0) {
+    if (args[i] && strcmp(args[i], "-n") == 0)
+    {
         n_flag = 1;
         i++;
     }
 	while (args[i] != NULL)
 	{
-        if (strcmp(args[i], "$?") == 0) {
+        if (strcmp(args[i], "$?") == 0)
             printf("%d", history->last_exit_status);
-        } else if (args[i][0] == '$') {
+        else if (args[i][0] == '$')
+        {
             char *env_var = getenv(args[i] + 1);
-            if (env_var) {
+            if (env_var)
                 printf("%s", env_var);
-            }
-        } else {
+        }
+        else
             printf("%s", args[i]);
-        }
-        if (args[i + 1]) {
+        if (args[i + 1])
             printf(" ");
-        }
         i++;
 	}
-    if (!n_flag) {
+    if (!n_flag)
         printf("\n");
-    }
     return (0);
 }
 

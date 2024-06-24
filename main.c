@@ -3,23 +3,17 @@
 void main_loop (t_llist **input_llist, t_history *history, char **envp)
 {
 	char		*input_str;
-	// char		*readline_str;
+	char		*readline_str;
     t_command	*cmd;
     int 		pipe_fds[2];
     int 		last_pipe_read_fd = -1;
-	/**
-	 * Set up signal handlers
-	 * ◦ ctrl-C displays a new prompt on a new line.
-	 * ◦ ctrl-D exits the shell.
-	 * ◦ ctrl-\ does nothing.
-	 */
+
     signal(SIGINT, handle_sigint);
     signal(SIGQUIT, handle_sigquit);
 
 	while(1)
 	{
-        // input_str = readline("minishell$ ");
-		// printf("hey1\n");
+        readline_str = readline("minishell$ ");
 		// if (!input_str) { // Ctrl + D (EOF)
         //     printf("exit\n");
         //     break;
@@ -28,19 +22,13 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
         fflush(stdout);
 		input_str = check_each_history(history);
 		// check_each_history(history);
-		// printf("-->%s<--\n", input_str);
-		// input_str = readline("minishell$ ");
 		
-		if (!input_str) { // Ctrl + D (EOF)
+		// Ctrl + D (EOF)
+		if (!input_str)
+		{
             printf("exit\n");
             break;
         }
-		// printf("-->%s<--\n", input_str);
-		// if (!input_str) {
-        //     perror("strdup");
-        //     break;
-        // }
-
         if (*input_str)
         {
 			// pareser
@@ -58,6 +46,13 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 
 				// get command
 				cmd = cmd_get(input_llist);
+				/* TODO:
+					check here or in the echo_cmd, ... functions
+					check whether > in cmd list
+					check whether < in cmd list
+					check whether >> in cmd list
+					check whether << in cmd list
+				*/
 				if (!*input_llist)
 					cmd->out_fd = STDOUT_FILENO; // last command output to stdout which is 1
 				else
@@ -71,7 +66,7 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 				if (cmd->out_fd == STDOUT_FILENO) // 1
 					cmd_execute(cmd, envp, history);
 				// printf("execute command:\n");
-				if (cmd->out_fd != STDIN_FILENO) // not equal to 1
+				if (cmd->out_fd != STDIN_FILENO && !cmd->output_file) // not equal to 1
 				{
 					close(pipe_fds[1]);
 					last_pipe_read_fd = pipe_fds[0];
@@ -96,6 +91,7 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 			llist_free(input_llist, free);
 		}
 		free(input_str);
+		free(readline_str);
 		// free(readline_str);
 	}
     free_history(history);

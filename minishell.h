@@ -10,6 +10,8 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <pwd.h>
+# include <sys/stat.h> // for <, <<, >, >>
+# include <fcntl.h>// for <, <<, >, >>
 
 # define MAX_INPUT_SIZE	1024
 # define MAX_ARG_SIZE	64
@@ -43,6 +45,10 @@ typedef struct s_command
     char    **args;
     int     in_fd;
     int     out_fd;
+    char    *input_file;
+    char    *output_file;
+    int     append_output;
+    char    *heredoc_delimiter;
 }   t_command;
 
 // ft_func.c
@@ -73,11 +79,13 @@ void			parser(t_llist **input_llist, char *input_str);
 int				parser_space(t_llist **input_llist, char *input_str, int i);
 int				parser_quote_s(t_llist **input_llist, char *input_str, int i);
 int				parser_quote_d(t_llist **input_llist, char *input_str, int i);
-int				parser_redir_t(t_llist **input_llist, char *input_str, int i);
-int				parser_redir_f(t_llist **input_llist, char *input_str, int i);
+int				parser_redir_right(t_llist **input_llist, char *input_str, int i);
+int				parser_redir_left(t_llist **input_llist, char *input_str, int i);
 int				parser_bar(t_llist **input_llist, char *input_str, int i);
 int				parser_and(t_llist **input_llist, char *input_str, int i);
 int				parser_string(t_llist **input_llist, char *input_str, int i);
+int				handle_heredoc(char *delimiter);
+void			parse_redirections(t_command *cmd, t_llist **tokens);
 
 // command_*.c
 t_command		*cmd_get(t_llist **tokens);

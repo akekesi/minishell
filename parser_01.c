@@ -65,7 +65,7 @@ int	parser_quote_d(t_llist **input_llist, char *input_str, int i)
 	return (i);
 }
 
-int	parser_redir_t(t_llist **input_llist, char *input_str, int i)
+int	parser_redir_right(t_llist **input_llist, char *input_str, int i)
 {
 	int		j;
 	char	*string;
@@ -74,11 +74,11 @@ int	parser_redir_t(t_llist **input_llist, char *input_str, int i)
 	t_llist	*node;
 
 	j = 1;
-	type = "redir_to_w";
+	type = "redir_write";
 	if (input_str[i+1] == '>')
 	{
 		j = 2;
-		type = "redir_to_a";
+		type = "redir_append";
 	}
 	string = ft_strget(input_str, i, i+j);
 	token = token_create(string, type);
@@ -88,7 +88,7 @@ int	parser_redir_t(t_llist **input_llist, char *input_str, int i)
 	return (i);
 }
 
-int	parser_redir_f(t_llist **input_llist, char *input_str, int i)
+int	parser_redir_left(t_llist **input_llist, char *input_str, int i)
 {
 	int		j;
 	char	*string;
@@ -97,11 +97,11 @@ int	parser_redir_f(t_llist **input_llist, char *input_str, int i)
 	t_llist	*node;
 
 	j = 1;
-	type = "redir_from_r";
+	type = "redir_read";
 	if (input_str[i+1] == '<')
 	{
 		j = 2;
-		type = "redir_from_d";
+		type = "redir_delimiter";
 	}
 	string = ft_strget(input_str, i, i+j);
 	token = token_create(string, type);
