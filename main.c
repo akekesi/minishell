@@ -3,7 +3,7 @@
 void main_loop (t_llist **input_llist, t_history *history, char **envp)
 {
 	char		*input_str;
-	char		*readline_str;
+	// char		*readline_str;
     t_command	*cmd;
     int 		pipe_fds[2];
     int 		last_pipe_read_fd = -1;
@@ -13,7 +13,7 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 
 	while(1)
 	{
-        readline_str = readline("minishell$ ");
+        // readline_str = readline("minishell$ ");
 		// if (!input_str) { // Ctrl + D (EOF)
         //     printf("exit\n");
         //     break;
@@ -91,7 +91,6 @@ void main_loop (t_llist **input_llist, t_history *history, char **envp)
 			llist_free(input_llist, free);
 		}
 		free(input_str);
-		free(readline_str);
 		// free(readline_str);
 	}
     free_history(history);
