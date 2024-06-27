@@ -22,8 +22,9 @@ void refresh_line(const char *buffer, int index) {
     fflush(stdout);
 }
 
-// void    check_each_history(t_history *history) {
-char	*check_each_history(t_history *history) {
+char	*check_each_history(t_history *history)
+// void    check_each_history(t_history *history)
+{
     struct termios orig_termios;
     enable_raw_mode(&orig_termios);
 
