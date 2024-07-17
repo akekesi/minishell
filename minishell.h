@@ -77,7 +77,7 @@ void			token_free(void *data);
 
 // string_00.c
 char			**string_2d_init(int n);
-void			string_2d_print(char **str);
-void			string_2d_free(char **str);
+void			string_2d_print(void *data);
+void			string_2d_free(void *data);
 
 #endif

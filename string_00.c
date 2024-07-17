@@ -17,10 +17,12 @@ char	**string_2d_init(int n)
 	return (str);
 }
 
-void	string_2d_print(char **str)
+void	string_2d_print(void *data)
 {
-	int	i;
+	int		i;
+	char	**str;
 
+	str = (char **)data;
 	i = 0;
 	while (str[i])
 	{
@@ -29,10 +31,12 @@ void	string_2d_print(char **str)
 	}
 }
 
-void	string_2d_free(char **str)
+void	string_2d_free(void *data)
 {
-	int	i;
+	int		i;
+	char	**str;
 
+	str = (char **)data;
 	i = 0;
 	while (str[i])
 	{
